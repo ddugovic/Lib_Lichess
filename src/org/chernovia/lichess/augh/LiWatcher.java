@@ -1,4 +1,4 @@
-package org.chernovia.lichess;
+package org.chernovia.lichess.augh;
 
 public interface LiWatcher {
 	public void lisock_msg(String message);

@@ -1,4 +1,4 @@
-package org.chernovia.lichess;
+package org.chernovia.lichess.augh;
 
 import java.net.*;
 import java.util.List;
@@ -204,7 +204,8 @@ public class LiSock extends Thread {
 
     @OnWebSocketMessage
     public void onMessage(String msg) {
-        //LOG.info("onMessage() - {}", msg);
+        LOG.info("onMessage() - {}", msg);
         for (LiWatcher gw : watchers) gw.lisock_msg(msg);
     }
 }
+
