@@ -176,7 +176,7 @@ public class LiSock extends Thread {
     public void mainLoop() throws InterruptedException {
    		while (session.isOpen()) {
 			Thread.sleep(2000); 
-			session.getRemote().sendStringByFuture("{\"t\":\"p\",\"v\":9999999}"); //HUGE number for socket version
+			session.getRemote().sendStringByFuture("{\"t\":\"p\"}"); //,\"v\":9999999}"); //HUGE number for socket version
    		}
     }
     
