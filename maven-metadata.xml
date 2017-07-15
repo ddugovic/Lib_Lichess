@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<metadata modelVersion="1.0.0">
+    <groupId>com.github.ddugovic</groupId>
+    <artifactId>Lib_ZugServ</artifactId>
+    <version>gradle-ae9e916d72-1</version>
+    <versioning>
+        <snapshot>
+            <timestamp>ae9e916d72</timestamp>
+            <buildNumber>1</buildNumber>
+        </snapshot>
+    </versioning>
+</metadata>
