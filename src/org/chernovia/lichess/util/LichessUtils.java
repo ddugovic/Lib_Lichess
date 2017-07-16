@@ -10,6 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.chernovia.lichess.gson.GameData;
 import org.chernovia.lichess.gson.LichessUser;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -67,20 +68,23 @@ public class LichessUtils {
 	
 	public static String getGameJSON(String gid) {
 		try {
-			return Jsoup.connect(
-			"https://lichess.org/"+gid).ignoreContentType(true).header(
-			"Content-Type","application/x-www-form-urlencoded").header(
-			"Accept","application/vnd.lichess.v2+json").validateTLSCertificates(false).
-			get().body().text(); 
+			Connection con = Jsoup.connect(
+			    "https://lichess.org/"+gid).ignoreContentType(true).header(
+			    "Content-Type","application/x-www-form-urlencoded").header(
+			    "Accept","application/vnd.lichess.v2+json").validateTLSCertificates(false);
+			log.debug("getGameJSON(String) url=https://lichess.org/" + gid + " con=" + con);
+			return con.get().body().text(); 
 		} catch (IOException ex) { log.warn(null, ex); return null; }	
 	}
 	
 	public static String[] getTVData(String gameType) {
 		Document doc;
 		try {
-			doc = Jsoup.connect(
-			"https://lichess.org/games/" + gameType).ignoreContentType(false).header(
-			"Content-Type","application/xhtml+xml").validateTLSCertificates(false).get();
+            Connection con = Jsoup.connect(
+			    "https://lichess.org/games/" + gameType).ignoreContentType(false).header(
+			    "Content-Type","application/xhtml+xml").validateTLSCertificates(false);
+			log.debug("getTVData(String) url=https://lichess.org/games/" + gameType + " con=" + con);
+			doc = con.get();
 			//log.debug(doc);
 			Elements gameIDs = doc.select("[data-live]");
 			String[] data = new String[gameIDs.size()]; int i=0;
@@ -96,9 +100,11 @@ public class LichessUtils {
 	public static String getUserData(String user,String id) {
 		Document doc;
 		try {
-			doc = Jsoup.connect(
-			"https://lichess.org/api/user/" + user).ignoreContentType(false).header(
-			"Content-Type","application/xhtml+xml").get();
+			Connection con = Jsoup.connect(
+			    "https://lichess.org/api/user/" + user).ignoreContentType(false).header(
+			    "Content-Type","application/xhtml+xml");
+			log.debug("getUserData(String) url=https://lichess.org/api/user/" + user + " con=" + con);
+			doc = con.get();
 			//log.debug(doc);
 			//doc.getElementsByAttribute(id)
 			Elements data = doc.getAllElements();
