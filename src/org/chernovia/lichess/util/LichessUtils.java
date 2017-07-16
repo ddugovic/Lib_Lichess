@@ -21,7 +21,7 @@ public class LichessUtils {
 	
 	public static LichessUser getUser(String user) {
 		try {
-			URL url = new URL("http://en.lichess.org/api/user/" + user);
+			URL url = new URL("http://lichess.org/api/user/" + user);
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET");
 			StringBuffer responseData = new StringBuffer();
@@ -46,7 +46,7 @@ public class LichessUtils {
 		//BUG: lichess API is broken, no longer provides FENs from ongoing games
 		//System.out.println("Fetching Game ID: " + gid);
 		try {
-			URL url = new URL("http://en.lichess.org/api/game/" + gid + extras);
+			URL url = new URL("http://lichess.org/api/game/" + gid + extras);
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
 			con.setRequestMethod("GET");
 			StringBuffer responseData = new StringBuffer();
@@ -67,7 +67,7 @@ public class LichessUtils {
 	public static String getGameJSON(String gid) {
 		try {
 			return Jsoup.connect(
-			"https://en.lichess.org/"+gid).ignoreContentType(true).header(
+			"https://lichess.org/"+gid).ignoreContentType(true).header(
 			"Content-Type","application/x-www-form-urlencoded").header(
 			"Accept","application/vnd.lichess.v2+json").validateTLSCertificates(false).
 			get().body().text(); 
@@ -78,7 +78,7 @@ public class LichessUtils {
 		Document doc;
 		try {
 			doc = Jsoup.connect(
-			"https://en.lichess.org/games/" + gameType).ignoreContentType(false).header(
+			"https://lichess.org/games/" + gameType).ignoreContentType(false).header(
 			"Content-Type","application/xhtml+xml").validateTLSCertificates(false).get();
 			//System.out.println(doc);
 			Elements gameIDs = doc.select("[data-live]");
@@ -96,7 +96,7 @@ public class LichessUtils {
 		Document doc;
 		try {
 			doc = Jsoup.connect(
-			"https://en.lichess.org/api/user/" + user).ignoreContentType(false).header(
+			"https://lichess.org/api/user/" + user).ignoreContentType(false).header(
 			"Content-Type","application/xhtml+xml").get();
 			//System.out.println(doc);
 			//doc.getElementsByAttribute(id)
