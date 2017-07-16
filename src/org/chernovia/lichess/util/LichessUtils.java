@@ -6,6 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.chernovia.lichess.gson.GameData;
 import org.chernovia.lichess.gson.LichessUser;
 import org.jsoup.Jsoup;
@@ -18,6 +20,7 @@ import com.google.gson.Gson;
 public class LichessUtils {
 	
 	public static String cr = "\n";
+    private static Log log = LogFactory.getLog(LichessUtils.class);
 	
 	public static LichessUser getUser(String user) {
 		try {
@@ -32,11 +35,10 @@ public class LichessUtils {
 			    line = br.readLine();
 			    if (line != null) { responseData.append(line); }
 			} while (line != null);
-			//System.out.println(responseData);
+			//log.debug(responseData);
 			Gson g = new Gson();
 			return g.fromJson(responseData.toString(), LichessUser.class);
-		}
-		catch (Exception augh) { augh.printStackTrace(); return null; }
+		} catch (Exception ex) { log.error(null, ex); return null; }	
 	}
 	
 	public static GameData getGame(String gid) { 
@@ -44,7 +46,7 @@ public class LichessUtils {
 	}
 	public static GameData getGame(String gid, String extras) {
 		//BUG: lichess API is broken, no longer provides FENs from ongoing games
-		//System.out.println("Fetching Game ID: " + gid);
+		//log.info("Fetching Game ID: " + gid);
 		try {
 			URL url = new URL("http://lichess.org/api/game/" + gid + extras);
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -57,11 +59,10 @@ public class LichessUtils {
 			    line = br.readLine();
 			    if (line != null) { responseData.append(line); }
 			} while (line != null);
-			//System.out.println(responseData);
+			//log.debug(responseData);
 			Gson g = new Gson();
 			return g.fromJson(responseData.toString(), GameData.class);
-		}
-		catch (Exception augh) { augh.printStackTrace(); return null; }
+		} catch (Exception ex) { log.error(null, ex); return null; }	
 	}
 	
 	public static String getGameJSON(String gid) {
@@ -71,7 +72,7 @@ public class LichessUtils {
 			"Content-Type","application/x-www-form-urlencoded").header(
 			"Accept","application/vnd.lichess.v2+json").validateTLSCertificates(false).
 			get().body().text(); 
-		} catch (IOException e) { e.printStackTrace(); return null; }	
+		} catch (IOException ex) { log.warn(null, ex); return null; }	
 	}
 	
 	public static String[] getTVData(String gameType) {
@@ -80,15 +81,15 @@ public class LichessUtils {
 			doc = Jsoup.connect(
 			"https://lichess.org/games/" + gameType).ignoreContentType(false).header(
 			"Content-Type","application/xhtml+xml").validateTLSCertificates(false).get();
-			//System.out.println(doc);
+			//log.debug(doc);
 			Elements gameIDs = doc.select("[data-live]");
 			String[] data = new String[gameIDs.size()]; int i=0;
 			for (Element e: gameIDs) {
-				//System.out.println("Attribute: " + e.attr("data-live"));
+				//log.debug("Attribute: " + e.attr("data-live"));
 				data[i++] = e.attr("data-live");
 			}
 			return data;
-		} catch (IOException e) { e.printStackTrace(); return null; }
+		} catch (IOException ex) { log.warn(null, ex); return null; }
 	} 
 	
 	
@@ -98,14 +99,14 @@ public class LichessUtils {
 			doc = Jsoup.connect(
 			"https://lichess.org/api/user/" + user).ignoreContentType(false).header(
 			"Content-Type","application/xhtml+xml").get();
-			//System.out.println(doc);
+			//log.debug(doc);
 			//doc.getElementsByAttribute(id)
 			Elements data = doc.getAllElements();
 			for (Element e: data) {
-				System.out.println("ergh: " + e.toString());
+				log.debug("ergh: " + e.toString());
 			}
 			return doc.getElementById(id).toString();
-		} catch (IOException e) { e.printStackTrace(); return e.getMessage(); }
+		} catch (IOException ex) { log.warn(null, ex); return ex.getMessage(); }
 	} 
 		
 	public static String getPgn(String id) {
